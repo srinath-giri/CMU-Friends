@@ -2,6 +2,7 @@ package com.example.cmufriends;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -16,6 +17,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.parse.LogInCallback;
+import com.parse.Parse;
 import com.parse.ParseException;
 import com.parse.ParseUser;
 
@@ -30,6 +32,7 @@ public class LoginActivity extends Activity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_login);
+		Parse.initialize(this, "kw8uUVhfdP3VG3tt5wh5eAGcUqB0EdQXNEPNP0Y4", "ir2NtarhYtNDV8VwDUCAG0q1dzAOF6zBL0a8gQEx");
 		signIn = (Button) findViewById(R.id.SignInButton);
 		signUp = (Button) findViewById(R.id.SignUpButton);
 		andrewId = (EditText) findViewById(R.id.LoginAndrewId);
@@ -66,8 +69,10 @@ public class LoginActivity extends Activity {
 	}
 
 	private void loginUser(ParseUser user) {
-		// TODO Auto-generated method stub
-
+		Intent i = new Intent(this, HomeActivity.class);
+		i.putExtra("username", user.getUsername());
+		startActivity(i);
+		finish();
 	}
 	
 	public void showToast(String msg) {
