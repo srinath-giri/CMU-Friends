@@ -25,6 +25,7 @@ public class RegisterActivity extends Activity implements OnClickListener {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_register);
 		buttonRegister = (Button) findViewById(R.id.buttonRegister);
+		buttonRegister.setOnClickListener(this);
 		editTextAndrewID = (EditText) findViewById(R.id.editTextRegisterAndrewID);
 		editTextPassword = (EditText) findViewById(R.id.editTextRegisterPassword);
 		editTextEmail = (EditText) findViewById(R.id.editTextRegisterEmail);
