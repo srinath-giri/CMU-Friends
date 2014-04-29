@@ -8,6 +8,7 @@ import java.util.List;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.location.Criteria;
 import android.os.Bundle;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -54,7 +55,13 @@ public class HomeActivity extends Activity {
 			showToast("Unable to get CMU friends because: " + e.getMessage());
 			e.printStackTrace();
 		}
-		ParseGeoPoint.getCurrentLocationInBackground(10000,
+		Criteria criteria = new Criteria();
+        criteria.setAccuracy(Criteria.ACCURACY_FINE);
+        criteria.setAltitudeRequired(false);
+        criteria.setBearingRequired(false);
+        criteria.setCostAllowed(true);
+        criteria.setPowerRequirement(Criteria.POWER_LOW);
+		ParseGeoPoint.getCurrentLocationInBackground(10000,criteria,
 				new LocationCallback() {
 
 					@Override
@@ -65,6 +72,7 @@ public class HomeActivity extends Activity {
 						} else {
 							showToast("Unable to get User Location because: "
 									+ e.getMessage());
+							e.printStackTrace();
 						}
 					}
 				});
