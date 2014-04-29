@@ -21,7 +21,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.parse.LocationCallback;
-import com.parse.Parse;
 import com.parse.ParseException;
 import com.parse.ParseGeoPoint;
 import com.parse.ParseObject;
@@ -39,8 +38,6 @@ public class HomeActivity extends Activity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_home);
-		Parse.initialize(this, "kw8uUVhfdP3VG3tt5wh5eAGcUqB0EdQXNEPNP0Y4",
-				"ir2NtarhYtNDV8VwDUCAG0q1dzAOF6zBL0a8gQEx");
 		username = getIntent().getExtras().getString("username");
 		people = (ListView) findViewById(R.id.peopleList);
 		populatePeopleList();
@@ -57,7 +54,7 @@ public class HomeActivity extends Activity {
 			showToast("Unable to get CMU friends because: " + e.getMessage());
 			e.printStackTrace();
 		}
-		ParseGeoPoint.getCurrentLocationInBackground(1000,
+		ParseGeoPoint.getCurrentLocationInBackground(10000,
 				new LocationCallback() {
 
 					@Override
