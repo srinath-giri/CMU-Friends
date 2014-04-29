@@ -32,8 +32,9 @@ public final class R {
         public static final int LoginPassword=0x7f08000c;
         public static final int SignInButton=0x7f08000d;
         public static final int SignUpButton=0x7f08000e;
+        public static final int TableRow1=0x7f080018;
         public static final int TextView01=0x7f08000b;
-        public static final int action_settings=0x7f08001b;
+        public static final int action_settings=0x7f08001e;
         public static final int andrewIdRow=0x7f080007;
         public static final int buttonRegister=0x7f080017;
         public static final int editTextRegisterAndrewID=0x7f080013;
@@ -44,21 +45,24 @@ public final class R {
         public static final int peopleList=0x7f080004;
         public static final int row1=0x7f080001;
         public static final int row2=0x7f080003;
-        public static final int text=0x7f08001a;
+        public static final int tabAndrewId=0x7f080019;
+        public static final int tabDistance=0x7f08001a;
+        public static final int text=0x7f08001d;
         public static final int textView1=0x7f080002;
         public static final int textView2=0x7f080008;
         public static final int textViewRegisterAndrewID=0x7f08000f;
         public static final int textViewRegisterEmail=0x7f080011;
         public static final int textViewRegisterFacebookID=0x7f080012;
         public static final int textViewRegisterPassword=0x7f080010;
-        public static final int title=0x7f080019;
-        public static final int toast_layout_root=0x7f080018;
+        public static final int title=0x7f08001c;
+        public static final int toast_layout_root=0x7f08001b;
     }
     public static final class layout {
         public static final int activity_home=0x7f030000;
         public static final int activity_login=0x7f030001;
         public static final int activity_register=0x7f030002;
-        public static final int toast_layout=0x7f030003;
+        public static final int tab_view=0x7f030003;
+        public static final int toast_layout=0x7f030004;
     }
     public static final class menu {
         public static final int home=0x7f070000;
