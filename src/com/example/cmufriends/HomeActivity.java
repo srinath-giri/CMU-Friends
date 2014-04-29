@@ -7,6 +7,7 @@ import java.util.Comparator;
 import java.util.List;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -32,6 +33,7 @@ public class HomeActivity extends Activity {
 	String username;
 	ParseGeoPoint userLoc;
 	List<ParseObject> results;
+	ArrayList<ListUser> users;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -46,11 +48,13 @@ public class HomeActivity extends Activity {
 
 	private void populatePeopleList() {
 		ParseQuery<ParseObject> query = ParseQuery.getQuery("User");
-		query.selectKeys(Arrays.asList("username", "location"));
+		query.selectKeys(Arrays.asList("username", "location", "facebookID",
+				"name"));
 		try {
 			results = query.find();
+			initPeopleList(results);
 		} catch (ParseException e) {
-			showToast(e.getMessage());
+			showToast("Unable to get CMU friends because: " + e.getMessage());
 			e.printStackTrace();
 		}
 		ParseGeoPoint.getCurrentLocationInBackground(1000,
@@ -69,17 +73,26 @@ public class HomeActivity extends Activity {
 				});
 	}
 
-	protected void sortPeopleList() {
-		ArrayList<ListUser> users = new ArrayList<ListUser>();
-		for(ParseObject p : results){
-			if(!p.getString("username").equals(username)){
+	private void initPeopleList(List<ParseObject> results) {
+		users = new ArrayList<ListUser>();
+		for (ParseObject p : results) {
+			if (!p.getString("username").equals(username)) {
 				String u = p.getString("username");
-				Double d = userLoc.distanceInMilesTo(p.getParseGeoPoint("location"));
-				ListUser user = new ListUser(d, u);
+				ParseGeoPoint loc = p.getParseGeoPoint("location");
+				Double d = Double.valueOf(0);
+				String n = p.getString("name");
+				String f = p.getString("facebookID");
+				ListUser user = new ListUser(d, u, n, f, loc);
 				users.add(user);
 			}
 		}
-		
+		addToListView(users);
+	}
+
+	protected void sortPeopleList() {
+		for (ListUser u : users) {
+			u.distance = userLoc.distanceInMilesTo(u.location);
+		}
 		Collections.sort(users, new Comparator<ListUser>() {
 			@Override
 			public int compare(ListUser lhs, ListUser rhs) {
@@ -104,6 +117,9 @@ public class HomeActivity extends Activity {
 	}
 
 	protected void goToProfile(ListUser user) {
+		Intent i = new Intent(this, ProfileActivity.class);
+		i.putExtra("facebookID", user.facebookId);
+		startActivity(i);
 	}
 
 	@Override
@@ -125,5 +141,5 @@ public class HomeActivity extends Activity {
 		text.setText(msg);
 		toast.show();
 	}
-	
+
 }
