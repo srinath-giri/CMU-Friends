@@ -10,6 +10,7 @@ import android.app.Activity;
 import android.content.Intent;
 import android.location.Criteria;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -26,13 +27,14 @@ import com.parse.ParseException;
 import com.parse.ParseGeoPoint;
 import com.parse.ParseObject;
 import com.parse.ParseQuery;
+import com.parse.ParseUser;
 
 public class HomeActivity extends Activity {
 
 	ListView people;
 	String username;
 	ParseGeoPoint userLoc;
-	List<ParseObject> results;
+	List<ParseUser> results;
 	ArrayList<ListUser> users;
 
 	@Override
@@ -45,28 +47,30 @@ public class HomeActivity extends Activity {
 	}
 
 	private void populatePeopleList() {
-		ParseQuery<ParseObject> query = ParseQuery.getQuery("User");
+		ParseQuery<ParseUser> query = ParseUser.getQuery();
 		query.selectKeys(Arrays.asList("username", "location", "facebookID",
 				"name"));
 		try {
 			results = query.find();
+			Log.d("HomeActivity", "Got people : " + results.size());
 			initPeopleList(results);
 		} catch (ParseException e) {
 			showToast("Unable to get CMU friends because: " + e.getMessage());
 			e.printStackTrace();
 		}
 		Criteria criteria = new Criteria();
-        criteria.setAccuracy(Criteria.ACCURACY_FINE);
+        criteria.setAccuracy(Criteria.ACCURACY_LOW);
         criteria.setAltitudeRequired(false);
         criteria.setBearingRequired(false);
         criteria.setCostAllowed(true);
         criteria.setPowerRequirement(Criteria.POWER_LOW);
-		ParseGeoPoint.getCurrentLocationInBackground(10000,criteria,
+		ParseGeoPoint.getCurrentLocationInBackground(60000,criteria,
 				new LocationCallback() {
 
 					@Override
 					public void done(ParseGeoPoint p, ParseException e) {
 						if (p != null) {
+							Log.d("HomeActivity", "Got location : " + p.toString());
 							userLoc = p;
 							sortPeopleList();
 						} else {
@@ -78,7 +82,7 @@ public class HomeActivity extends Activity {
 				});
 	}
 
-	private void initPeopleList(List<ParseObject> results) {
+	private void initPeopleList(List<ParseUser> results) {
 		users = new ArrayList<ListUser>();
 		for (ParseObject p : results) {
 			if (!p.getString("username").equals(username)) {

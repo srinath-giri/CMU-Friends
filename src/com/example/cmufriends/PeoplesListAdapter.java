@@ -1,5 +1,6 @@
 package com.example.cmufriends;
 
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 
 import android.content.Context;
@@ -56,8 +57,9 @@ public class PeoplesListAdapter extends BaseAdapter{
 			holder = (ViewHolder) view.getTag();
 		}
 
-		holder.andrewId.setText(listUsers.get(pos).username);
-		holder.distance.setText(listUsers.get(pos).distance +" mi");
+		holder.andrewId.setText(listUsers.get(pos).name);
+		String dis = new DecimalFormat("#.##").format(listUsers.get(pos).distance);
+		holder.distance.setText( dis +" miles");
 		return view;
 	}
 
