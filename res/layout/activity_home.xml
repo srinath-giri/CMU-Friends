@@ -29,7 +29,8 @@
     <TableRow
         android:id="@+id/row2"
         android:layout_width="fill_parent"
-        android:layout_height="wrap_content" >
+        android:layout_height="402dp"
+        android:paddingTop="10dp" >
 
         <ListView
             android:id="@+id/peopleList"
@@ -37,6 +38,21 @@
             android:layout_height="wrap_content"
             tools:listitem="@android:layout/simple_list_item_1" >
         </ListView>
+    </TableRow>
+
+    <TableRow
+        android:id="@+id/tableRow1"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center" >
+
+        <Button
+            android:id="@+id/homeShowMapButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:text="Show Map" />
+
     </TableRow>
 
 </LinearLayout>
