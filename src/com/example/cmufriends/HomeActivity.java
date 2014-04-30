@@ -15,10 +15,13 @@ import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
+import android.widget.Button;
 import android.widget.ListView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -36,6 +39,8 @@ public class HomeActivity extends Activity {
 	ParseGeoPoint userLoc;
 	List<ParseUser> results;
 	ArrayList<ListUser> users;
+	Button showMapButton;
+	ProgressBar locationSpinner;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -43,7 +48,26 @@ public class HomeActivity extends Activity {
 		setContentView(R.layout.activity_home);
 		username = getIntent().getExtras().getString("username");
 		people = (ListView) findViewById(R.id.peopleList);
+		showMapButton = (Button) findViewById(R.id.homeShowMapButton);
+		locationSpinner = (ProgressBar) findViewById(R.id.locationSpinner);
+		showMapButton.setOnClickListener(new OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				showMap();
+			}
+
+		});
+		showMapButton.setEnabled(false);
+		showMapButton.setVisibility(View.INVISIBLE);
+		locationSpinner.setEnabled(true);
+		locationSpinner.setVisibility(View.VISIBLE);
 		populatePeopleList();
+	}
+	
+	private void showMap() {
+		// TODO Auto-generated method stub
+		
 	}
 
 	private void populatePeopleList() {
@@ -109,6 +133,10 @@ public class HomeActivity extends Activity {
 			}
 		});
 		addToListView(users);
+		showMapButton.setEnabled(true);
+		showMapButton.setVisibility(View.VISIBLE);
+		locationSpinner.setEnabled(false);
+		locationSpinner.setVisibility(View.INVISIBLE);
 	}
 
 	private void addToListView(ArrayList<ListUser> users) {
