@@ -132,6 +132,7 @@ public class HomeActivity extends Activity {
 		i.putExtra("name", user.name);
 		i.putExtra("userLatitude", user.location.getLatitude());
 		i.putExtra("userLongitude", user.location.getLongitude());
+		i.putExtra("users", users);
 		startActivity(i);
 	}
 
