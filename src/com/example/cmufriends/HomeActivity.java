@@ -129,6 +129,7 @@ public class HomeActivity extends Activity {
 		Intent i = new Intent(this, ProfileActivity.class);
 		i.putExtra("facebookID", user.facebookId);
 		i.putExtra("andrewID", user.username);
+		i.putExtra("name", user.name);
 		i.putExtra("userLatitude", user.location.getLatitude());
 		i.putExtra("userLongitude", user.location.getLongitude());
 		startActivity(i);
