@@ -2,10 +2,14 @@ package com.example.cmufriends;
 
 import android.app.Activity;
 import android.os.Bundle;
+import android.view.Gravity;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.parse.ParseException;
@@ -62,12 +66,25 @@ public class RegisterActivity extends Activity implements OnClickListener {
 		user.signUpInBackground(new SignUpCallback() {
 			public void done(ParseException e) {
 				if (e == null) {
-					Toast.makeText(getApplicationContext(), "Success", Toast.LENGTH_SHORT).show();
+					showToast("Successfully registered!");
 				} else {
-					Toast.makeText(getApplicationContext(), e.getMessage(), Toast.LENGTH_SHORT).show();
+					showToast("Unable to register because " + e.getMessage());
 				}
 			}
 		});
+	}
+	
+	public void showToast(String msg) {
+		Toast toast = new Toast(getApplicationContext());
+		toast.setDuration(Toast.LENGTH_LONG);
+		toast.setGravity(Gravity.TOP | Gravity.CENTER, 0, 0);
+		LayoutInflater inflater = getLayoutInflater();
+		View layout = inflater.inflate(R.layout.toast_layout,
+				(ViewGroup) findViewById(R.id.toast_layout_root));
+		toast.setView(layout);
+		TextView text = (TextView) layout.findViewById(R.id.text);
+		text.setText(msg);
+		toast.show();
 	}
 
 }
