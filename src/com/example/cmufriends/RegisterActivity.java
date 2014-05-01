@@ -17,6 +17,8 @@ public class RegisterActivity extends Activity implements OnClickListener {
 	private Button buttonRegister;
 	private EditText editTextAndrewID;
 	private EditText editTextPassword;
+	private EditText editTextName;
+	private EditText editTextDepartment;
 	private EditText editTextEmail;
 	private EditText editTextFacebookID;
 
@@ -28,6 +30,8 @@ public class RegisterActivity extends Activity implements OnClickListener {
 		buttonRegister.setOnClickListener(this);
 		editTextAndrewID = (EditText) findViewById(R.id.editTextRegisterAndrewID);
 		editTextPassword = (EditText) findViewById(R.id.editTextRegisterPassword);
+		editTextName = (EditText) findViewById(R.id.editTextRegisterName);
+		editTextDepartment = (EditText) findViewById(R.id.editTextRegisterDepartment);
 		editTextEmail = (EditText) findViewById(R.id.editTextRegisterEmail);
 		editTextFacebookID = (EditText) findViewById(R.id.editTextRegisterFacebookID);
 	}
@@ -42,12 +46,16 @@ public class RegisterActivity extends Activity implements OnClickListener {
 	private void register() {
 		String andrewID = editTextAndrewID.getText().toString();
 		String password = editTextPassword.getText().toString();
+		String name = editTextName.getText().toString();
+		String department = editTextDepartment.getText().toString();
 		String email = editTextEmail.getText().toString();
 		String facebookID = editTextFacebookID.getText().toString();
 
 		ParseUser user = new ParseUser();
 		user.setUsername(andrewID);
 		user.setPassword(password);
+		user.put("name", name);
+		user.put("department", department);
 		user.setEmail(email);
 		user.put("facebookID", facebookID);
 

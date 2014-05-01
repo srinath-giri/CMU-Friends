@@ -36,6 +36,22 @@
                 android:layout_gravity="right"
                 android:text="Password:" 
                 android:textSize="30sp"/>
+            
+            <TextView
+                android:id="@+id/textViewRegisterName"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="right"
+                android:text="Name:" 
+                android:textSize="30sp"/>
+            
+            <TextView
+                android:id="@+id/textViewRegisterDepartment"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="right"
+                android:text="Department:" 
+                android:textSize="30sp"/>
 
             <TextView
                 android:id="@+id/textViewRegisterEmail"
@@ -75,6 +91,22 @@
                 android:inputType="textPassword" >
             </EditText>
 
+			<EditText
+                android:id="@+id/editTextRegisterName"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:ems="10"
+                android:inputType="textPersonName" >
+            </EditText>
+
+			<EditText
+                android:id="@+id/editTextRegisterDepartment"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:ems="10"
+                android:inputType="textPersonName" >
+            </EditText>
+			
             <EditText
                 android:id="@+id/editTextRegisterEmail"
                 android:layout_width="match_parent"
