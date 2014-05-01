@@ -31,17 +31,11 @@ public class ProfileActivity extends Activity implements OnClickListener {
 	private TextView textViewProfileGender;
 	private TextView textViewProfileFacebookID;
 	private TextView textViewProfileEmail;
-	
-	private String andrewID = "";
-	private String name = "";
-	private String facebookID = "";
+
+	private ListUser user;
 	private String facebookNumberID = "";
 	private String gender = "";
-	private double latitude;
-	private double longitude;
 
-	private SocialTask socialTask;
-	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -51,49 +45,48 @@ public class ProfileActivity extends Activity implements OnClickListener {
 		textViewProfileFacebookID = (TextView) findViewById(R.id.textViewProfileFacebookID);
 		textViewProfileEmail = (TextView) findViewById(R.id.textViewProfileEmail);
 
-		name = getIntent().getExtras().getString("name");
-		andrewID = getIntent().getExtras().getString("andrewID");
-		facebookID = getIntent().getExtras().getString("facebookID");
-		latitude = getIntent().getExtras().getDouble("userLatitude");
-		longitude = getIntent().getExtras().getDouble("userLongitude");
+		user = (ListUser) getIntent().getExtras()
+				.getParcelableArrayList("user").get(0);
 
-		textViewProfileName.setText(name);
+		textViewProfileName.setText(user.name);
 		textViewProfileGender.setText(gender);
-		textViewProfileFacebookID.setText(facebookID);
-		textViewProfileEmail.setText(andrewID+'@'+getString(R.string.andrew_domain));
-		
+		textViewProfileFacebookID.setText(user.facebookId);
+		textViewProfileEmail.setText(user.username + '@'
+				+ getString(R.string.andrew_domain));
+
 		buttonVisitFacebook = (Button) findViewById(R.id.buttonVisitFacebook);
 		buttonSendFacebookMessage = (Button) findViewById(R.id.buttonSendFacebookMessage);
-		
+
 		buttonShowOnMap = (Button) findViewById(R.id.buttonShowOnMap);
 		buttonShowOnMap.setOnClickListener(this);
 
-		if(facebookNumberID == "") new SocialTask().getFacebookProfile();
+		if (facebookNumberID == "")
+			new SocialTask().getFacebookProfile();
 	}
 
 	@Override
 	public void onClick(View v) {
 		if (v == buttonVisitFacebook) {
 			visitFacebook();
-		}
-		else if (v ==  buttonSendFacebookMessage) {
+		} else if (v == buttonSendFacebookMessage) {
 			sendFacebookMessage();
-		}
-		else if (v ==  buttonShowOnMap) {
+		} else if (v == buttonShowOnMap) {
 			showOnMap();
 		}
 	}
 
 	private void visitFacebook() {
-		startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("fb://profile/"+facebookNumberID)));
+		startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("fb://profile/"
+				+ facebookNumberID)));
 	}
 
 	private void sendFacebookMessage() {
-		startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("fb://messaging/"+facebookNumberID)));
+		startActivity(new Intent(Intent.ACTION_VIEW,
+				Uri.parse("fb://messaging/" + facebookNumberID)));
 	}
 
 	private void showOnMap() {
-		
+
 	}
 
 	class SocialTask extends AsyncTask<String, Void, String>{
@@ -136,13 +129,15 @@ public class ProfileActivity extends Activity implements OnClickListener {
 				facebookNumberID = user.getString("id");
 				gender = user.getString("gender");
 			} catch (JSONException e) {
-				Log.d(getString(R.string.title_activity_profile),e.getMessage());
+				Log.d(getString(R.string.title_activity_profile),
+						e.getMessage());
 			}
-	        Log.d(getString(R.string.title_activity_profile), facebookNumberID);
-	    }
+			Log.d(getString(R.string.title_activity_profile), facebookNumberID);
+		}
 
 		private void getFacebookProfile() {
-			execute("http://graph.facebook.com/"+facebookID+"?fields=id,gender");
+			execute("http://graph.facebook.com/" + user.facebookId
+					+ "?fields=id,gender");
 		}
 	}
 }

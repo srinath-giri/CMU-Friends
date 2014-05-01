@@ -19,34 +19,37 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.Button;
-import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.markupartist.android.widget.PullToRefreshListView;
+import com.markupartist.android.widget.PullToRefreshListView.OnRefreshListener;
 import com.parse.LocationCallback;
 import com.parse.ParseException;
 import com.parse.ParseGeoPoint;
 import com.parse.ParseObject;
 import com.parse.ParseQuery;
 import com.parse.ParseUser;
+import com.parse.SaveCallback;
 
 public class HomeActivity extends Activity {
 
-	ListView people;
+	PullToRefreshListView people;
 	String username;
 	ListUser currentUser;
 	List<ParseUser> results;
 	ArrayList<ListUser> users;
 	Button showMapButton;
 	ProgressBar locationSpinner;
+	Boolean loading;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_home);
 		username = getIntent().getExtras().getString("username");
-		people = (ListView) findViewById(R.id.peopleList);
+		people = (PullToRefreshListView) findViewById(R.id.peopleList);
 		showMapButton = (Button) findViewById(R.id.homeShowMapButton);
 		locationSpinner = (ProgressBar) findViewById(R.id.locationSpinner);
 		showMapButton.setOnClickListener(new OnClickListener() {
@@ -57,10 +60,6 @@ public class HomeActivity extends Activity {
 			}
 
 		});
-		showMapButton.setEnabled(false);
-		showMapButton.setVisibility(View.INVISIBLE);
-		locationSpinner.setEnabled(true);
-		locationSpinner.setVisibility(View.VISIBLE);
 		populatePeopleList();
 	}
 
@@ -75,6 +74,7 @@ public class HomeActivity extends Activity {
 	}
 
 	private void populatePeopleList() {
+		showSpinner();
 		ParseQuery<ParseUser> query = ParseUser.getQuery();
 		query.selectKeys(Arrays.asList("username", "location", "facebookID",
 				"name"));
@@ -105,18 +105,54 @@ public class HomeActivity extends Activity {
 									+ e.getMessage());
 						}
 					}
+
+					protected void sortPeopleList() {
+						for (ListUser u : users) {
+							u.distance = currentUser.getLocation()
+									.distanceInMilesTo(u.getLocation());
+						}
+						Collections.sort(users, new Comparator<ListUser>() {
+							@Override
+							public int compare(ListUser lhs, ListUser rhs) {
+								return lhs.distance.compareTo(rhs.distance);
+							}
+						});
+						addToListView(users);
+						hideSpinner();
+					}
+
 				});
+	}
+
+	private void showSpinner() {
+		showMapButton.setEnabled(false);
+		showMapButton.setVisibility(View.INVISIBLE);
+		locationSpinner.setEnabled(true);
+		locationSpinner.setVisibility(View.VISIBLE);
+		loading = true;
+	}
+
+	private void hideSpinner() {
+		showMapButton.setEnabled(true);
+		showMapButton.setVisibility(View.VISIBLE);
+		locationSpinner.setEnabled(false);
+		locationSpinner.setVisibility(View.INVISIBLE);
+		loading = false;
+
 	}
 
 	protected void updateUserLocation(ParseGeoPoint p) {
 		ParseUser user = ParseUser.getCurrentUser();
 		user.put("location", p);
-		try {
-			user.save();
-		} catch (ParseException e) {
-			showToast("Unable to update User Location because: "
-					+ e.getMessage());
-		}
+		user.saveInBackground(new SaveCallback() {
+			@Override
+			public void done(ParseException e) {
+				if (e != null) {
+					showToast("Unable to update User Location because: "
+							+ e.getMessage());
+				}
+			}
+		});
 	}
 
 	private void initPeopleList(List<ParseUser> results) {
@@ -124,8 +160,11 @@ public class HomeActivity extends Activity {
 		for (ParseObject p : results) {
 			if (!p.getString("username").equals(username)) {
 				String u = p.getString("username");
-				ParseGeoPoint loc = p.getParseGeoPoint("location");
-				Double d = Double.valueOf(0);
+				ParseGeoPoint loc = new ParseGeoPoint(0, 0);
+				if (p.containsKey("location")) {
+					loc = p.getParseGeoPoint("location");
+				}
+				Double d = Double.valueOf(-1);
 				String n = p.getString("name");
 				String f = p.getString("facebookID");
 				ListUser user = new ListUser(d, u, n, f, loc);
@@ -141,24 +180,6 @@ public class HomeActivity extends Activity {
 		addToListView(users);
 	}
 
-	protected void sortPeopleList() {
-		for (ListUser u : users) {
-			u.distance = currentUser.getLocation().distanceInMilesTo(
-					u.getLocation());
-		}
-		Collections.sort(users, new Comparator<ListUser>() {
-			@Override
-			public int compare(ListUser lhs, ListUser rhs) {
-				return lhs.distance.compareTo(rhs.distance);
-			}
-		});
-		addToListView(users);
-		showMapButton.setEnabled(true);
-		showMapButton.setVisibility(View.VISIBLE);
-		locationSpinner.setEnabled(false);
-		locationSpinner.setVisibility(View.INVISIBLE);
-	}
-
 	private void addToListView(ArrayList<ListUser> users) {
 		PeoplesListAdapter ad = new PeoplesListAdapter(this, users);
 		people.setAdapter(ad);
@@ -167,15 +188,26 @@ public class HomeActivity extends Activity {
 			@Override
 			public void onItemClick(AdapterView<?> arg0, View arg1, int arg2,
 					long arg3) {
-				ListUser user = (ListUser) people.getItemAtPosition(arg2);
-				goToProfile(user);
+				if (!loading) {
+					ListUser user = (ListUser) people.getItemAtPosition(arg2);
+					goToProfile(user);
+				}
+			}
+		});
+		people.setOnRefreshListener(new OnRefreshListener() {
+
+			@Override
+			public void onRefresh() {
+				populatePeopleList();
 			}
 		});
 	}
 
 	protected void goToProfile(ListUser user) {
 		Intent i = new Intent(this, ProfileActivity.class);
-		i.putParcelableArrayListExtra("users", users);
+		ArrayList<ListUser> userAsList = new ArrayList<ListUser>(
+				Arrays.asList(user));
+		i.putParcelableArrayListExtra("user", userAsList);
 		ArrayList<ListUser> currentUserAsList = new ArrayList<ListUser>(
 				Arrays.asList(currentUser));
 		i.putParcelableArrayListExtra("currentUser", currentUserAsList);
