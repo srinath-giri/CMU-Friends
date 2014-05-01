@@ -83,11 +83,14 @@ public final class R {
         public static final int login=0x7f070001;
     }
     public static final class string {
-        public static final int IntroString=0x7f050003;
-        public static final int action_settings=0x7f050001;
+        public static final int IntroString=0x7f050004;
+        public static final int action_settings=0x7f050002;
+        public static final int andrew_domain=0x7f050007;
+        public static final int app_id=0x7f050001;
         public static final int app_name=0x7f050000;
-        public static final int hello_world=0x7f050002;
-        public static final int title_activity_home=0x7f050004;
+        public static final int hello_world=0x7f050003;
+        public static final int title_activity_home=0x7f050005;
+        public static final int title_activity_profile=0x7f050006;
     }
     public static final class style {
         /** 
