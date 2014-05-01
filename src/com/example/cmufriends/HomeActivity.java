@@ -98,6 +98,7 @@ public class HomeActivity extends Activity {
 					public void done(ParseGeoPoint p, ParseException e) {
 						if (p != null) {
 							currentUser.setLocation(p);
+							updateUserLocation(p);
 							sortPeopleList();
 						} else {
 							showToast("Unable to get User Location because: "
@@ -106,6 +107,9 @@ public class HomeActivity extends Activity {
 						}
 					}
 				});
+	}
+
+	protected void updateUserLocation(ParseGeoPoint p) {
 	}
 
 	private void initPeopleList(List<ParseUser> results) {
