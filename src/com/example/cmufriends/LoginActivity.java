@@ -80,7 +80,6 @@ public class LoginActivity extends Activity {
 		Intent i = new Intent(this, HomeActivity.class);
 		i.putExtra("username", user.getUsername());
 		startActivity(i);
-		finish();
 	}
 
 	public void showToast(String msg) {
