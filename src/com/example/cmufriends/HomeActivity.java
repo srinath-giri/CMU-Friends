@@ -52,6 +52,12 @@ public class HomeActivity extends Activity {
 		people = (PullToRefreshListView) findViewById(R.id.peopleList);
 		showMapButton = (Button) findViewById(R.id.homeShowMapButton);
 		locationSpinner = (ProgressBar) findViewById(R.id.locationSpinner);
+		setup();
+		people.onRefresh();
+	}
+
+	private void setup() {
+		loading = false;
 		showMapButton.setOnClickListener(new OnClickListener() {
 
 			@Override
@@ -60,7 +66,44 @@ public class HomeActivity extends Activity {
 			}
 
 		});
-		populatePeopleList();
+		people.setOnRefreshListener(new OnRefreshListener() {
+
+			@Override
+			public void onRefresh() {
+				if (!loading) {
+					showSpinner();
+					populatePeopleList();
+				}
+			}
+		});
+		people.setOnItemClickListener(new OnItemClickListener() {
+
+			@Override
+			public void onItemClick(AdapterView<?> arg0, View arg1, int arg2,
+					long arg3) {
+				if (!loading) {
+					ListUser user = (ListUser) people.getItemAtPosition(arg2);
+					goToProfile(user);
+				}
+			}
+		});
+	}
+
+	private void showSpinner() {
+		showMapButton.setEnabled(false);
+		showMapButton.setVisibility(View.INVISIBLE);
+		locationSpinner.setEnabled(true);
+		locationSpinner.setVisibility(View.VISIBLE);
+		loading = true;
+	}
+
+	private void hideSpinner() {
+		showMapButton.setEnabled(true);
+		showMapButton.setVisibility(View.VISIBLE);
+		locationSpinner.setEnabled(false);
+		locationSpinner.setVisibility(View.INVISIBLE);
+		loading = false;
+		people.onRefreshComplete();
 	}
 
 	private void showMap() {
@@ -74,7 +117,6 @@ public class HomeActivity extends Activity {
 	}
 
 	private void populatePeopleList() {
-		showSpinner();
 		ParseQuery<ParseUser> query = ParseUser.getQuery();
 		query.selectKeys(Arrays.asList("username", "location", "facebookID",
 				"name"));
@@ -124,23 +166,6 @@ public class HomeActivity extends Activity {
 				});
 	}
 
-	private void showSpinner() {
-		showMapButton.setEnabled(false);
-		showMapButton.setVisibility(View.INVISIBLE);
-		locationSpinner.setEnabled(true);
-		locationSpinner.setVisibility(View.VISIBLE);
-		loading = true;
-	}
-
-	private void hideSpinner() {
-		showMapButton.setEnabled(true);
-		showMapButton.setVisibility(View.VISIBLE);
-		locationSpinner.setEnabled(false);
-		locationSpinner.setVisibility(View.INVISIBLE);
-		loading = false;
-
-	}
-
 	protected void updateUserLocation(ParseGeoPoint p) {
 		ParseUser user = ParseUser.getCurrentUser();
 		user.put("location", p);
@@ -160,19 +185,25 @@ public class HomeActivity extends Activity {
 		for (ParseObject p : results) {
 			if (!p.getString("username").equals(username)) {
 				String u = p.getString("username");
+				String n = u;
 				ParseGeoPoint loc = new ParseGeoPoint(0, 0);
 				if (p.containsKey("location")) {
 					loc = p.getParseGeoPoint("location");
 				}
 				Double d = Double.valueOf(-1);
-				String n = p.getString("name");
+				if (p.containsKey("name")) {
+					n = p.getString("name");
+				}
 				String f = p.getString("facebookID");
 				ListUser user = new ListUser(d, u, n, f, loc);
 				users.add(user);
 			} else {
 				String u = p.getString("username");
 				Double d = Double.valueOf(0);
-				String n = p.getString("name");
+				String n = u;
+				if (p.containsKey("name")) {
+					n = p.getString("name");
+				}
 				String f = p.getString("facebookID");
 				currentUser = new ListUser(d, u, n, f, null);
 			}
@@ -183,24 +214,6 @@ public class HomeActivity extends Activity {
 	private void addToListView(ArrayList<ListUser> users) {
 		PeoplesListAdapter ad = new PeoplesListAdapter(this, users);
 		people.setAdapter(ad);
-		people.setOnItemClickListener(new OnItemClickListener() {
-
-			@Override
-			public void onItemClick(AdapterView<?> arg0, View arg1, int arg2,
-					long arg3) {
-				if (!loading) {
-					ListUser user = (ListUser) people.getItemAtPosition(arg2);
-					goToProfile(user);
-				}
-			}
-		});
-		people.setOnRefreshListener(new OnRefreshListener() {
-
-			@Override
-			public void onRefresh() {
-				populatePeopleList();
-			}
-		});
 	}
 
 	protected void goToProfile(ListUser user) {
