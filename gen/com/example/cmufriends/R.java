@@ -21,8 +21,9 @@ public final class R {
         public static final int activity_vertical_margin=0x7f040001;
     }
     public static final class drawable {
-        public static final int ic_launcher=0x7f020000;
-        public static final int toast_shape=0x7f020001;
+        public static final int cmu_friends_icon=0x7f020000;
+        public static final int ic_launcher=0x7f020001;
+        public static final int toast_shape=0x7f020002;
     }
     public static final class id {
         public static final int IntroText=0x7f080009;
