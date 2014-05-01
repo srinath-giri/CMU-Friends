@@ -89,42 +89,42 @@ public class ProfileActivity extends Activity implements OnClickListener {
 
 	}
 
-	class SocialTask extends AsyncTask<String, Void, String> {
+	class SocialTask extends AsyncTask<String, Void, String>{
 
-		@Override
-		protected String doInBackground(String... uri) {
-			HttpClient httpClient = new DefaultHttpClient();
-			HttpResponse httpResponse;
-			String jsonResult = null;
-			try {
-				httpResponse = httpClient.execute(new HttpGet(uri[0]));
-				if (httpResponse.getStatusLine().getStatusCode() == HttpStatus.SC_OK) {
-					ByteArrayOutputStream buffer = new ByteArrayOutputStream();
-					httpResponse.getEntity().writeTo(buffer);
-					buffer.close();
-					jsonResult = buffer.toString();
-				}
-			} catch (IOException e) {
-				Log.d(getString(R.string.title_activity_profile),
-						e.getMessage());
-			}
-			return jsonResult;
-		}
+	    @Override
+	    protected String doInBackground(String... uri) {
+	        HttpClient httpClient = new DefaultHttpClient();
+	        HttpResponse httpResponse;
+	        String jsonResult = null;
+	        try {
+	            httpResponse = httpClient.execute(new HttpGet(uri[0]));
+	            if(httpResponse.getStatusLine().getStatusCode() == HttpStatus.SC_OK){
+	                ByteArrayOutputStream buffer = new ByteArrayOutputStream();
+	                httpResponse.getEntity().writeTo(buffer);
+	                buffer.close();
+	                jsonResult = buffer.toString();
+	            }
+	        } catch (IOException e) {
+                Log.d(getString(R.string.title_activity_profile), e.getMessage());
+	        } catch (Exception e) {
+	        	Log.d(getString(R.string.title_activity_profile), e.getMessage());
+	        }
+	        return jsonResult;
+	    }
 
-		@Override
-		protected void onPostExecute(String json) {
-			super.onPostExecute(json);
-			if (json != null) {
-				parseJSON(json);
-				textViewProfileGender.setText(gender);
-				buttonSendFacebookMessage
-						.setOnClickListener(ProfileActivity.this);
-				buttonVisitFacebook.setOnClickListener(ProfileActivity.this);
-			}
-		}
+	    @Override
+	    protected void onPostExecute(String json) {
+	        super.onPostExecute(json);
+	        if(json != null) {
+	        parseJSON(json);
+	        textViewProfileGender.setText(gender);
+	        buttonSendFacebookMessage.setOnClickListener(ProfileActivity.this);
+			buttonVisitFacebook.setOnClickListener(ProfileActivity.this);
+	        }
+	    }
 
-		private void parseJSON(String jsonResult) {
-			try {
+	    private void parseJSON(String jsonResult) {
+            try {
 				JSONObject user = new JSONObject(jsonResult);
 				facebookNumberID = user.getString("id");
 				gender = user.getString("gender");
