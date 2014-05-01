@@ -10,21 +10,21 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.TextView;
 
-public class PeoplesListAdapter extends BaseAdapter{
-	
+public class PeoplesListAdapter extends BaseAdapter {
+
 	private ArrayList<ListUser> listUsers;
 	private LayoutInflater layout;
-	
-	public PeoplesListAdapter(Context c, ArrayList<ListUser> u){
+
+	public PeoplesListAdapter(Context c, ArrayList<ListUser> u) {
 		this.layout = LayoutInflater.from(c);
 		this.listUsers = u;
 	}
 
 	@Override
 	public int getCount() {
-		if(listUsers != null){
+		if (listUsers != null) {
 			return listUsers.size();
-		}else{
+		} else {
 			return 0;
 		}
 	}
@@ -38,7 +38,7 @@ public class PeoplesListAdapter extends BaseAdapter{
 	public long getItemId(int position) {
 		return position;
 	}
-	
+
 	static class ViewHolder {
 		TextView andrewId;
 		TextView distance;
@@ -58,8 +58,14 @@ public class PeoplesListAdapter extends BaseAdapter{
 		}
 
 		holder.andrewId.setText(listUsers.get(pos).name);
-		String dis = new DecimalFormat("#.##").format(listUsers.get(pos).distance);
-		holder.distance.setText( dis +" miles");
+		String dis = "N/A";
+		if (listUsers.get(pos).distance >= 0) {
+			dis = new DecimalFormat("#.##")
+					.format(listUsers.get(pos).distance);
+			dis += " miles";
+		}
+		holder.distance.setText(dis);
+
 		return view;
 	}
 

@@ -42,6 +42,7 @@ public class HomeActivity extends Activity {
 	ArrayList<ListUser> users;
 	Button showMapButton;
 	ProgressBar locationSpinner;
+	Boolean loading;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -104,6 +105,22 @@ public class HomeActivity extends Activity {
 									+ e.getMessage());
 						}
 					}
+
+					protected void sortPeopleList() {
+						for (ListUser u : users) {
+							u.distance = currentUser.getLocation()
+									.distanceInMilesTo(u.getLocation());
+						}
+						Collections.sort(users, new Comparator<ListUser>() {
+							@Override
+							public int compare(ListUser lhs, ListUser rhs) {
+								return lhs.distance.compareTo(rhs.distance);
+							}
+						});
+						addToListView(users);
+						hideSpinner();
+					}
+
 				});
 	}
 
@@ -112,6 +129,7 @@ public class HomeActivity extends Activity {
 		showMapButton.setVisibility(View.INVISIBLE);
 		locationSpinner.setEnabled(true);
 		locationSpinner.setVisibility(View.VISIBLE);
+		loading = true;
 	}
 
 	private void hideSpinner() {
@@ -119,6 +137,7 @@ public class HomeActivity extends Activity {
 		showMapButton.setVisibility(View.VISIBLE);
 		locationSpinner.setEnabled(false);
 		locationSpinner.setVisibility(View.INVISIBLE);
+		loading = false;
 
 	}
 
@@ -145,7 +164,7 @@ public class HomeActivity extends Activity {
 				if (p.containsKey("location")) {
 					loc = p.getParseGeoPoint("location");
 				}
-				Double d = Double.valueOf(0);
+				Double d = Double.valueOf(-1);
 				String n = p.getString("name");
 				String f = p.getString("facebookID");
 				ListUser user = new ListUser(d, u, n, f, loc);
@@ -161,21 +180,6 @@ public class HomeActivity extends Activity {
 		addToListView(users);
 	}
 
-	protected void sortPeopleList() {
-		for (ListUser u : users) {
-			u.distance = currentUser.getLocation().distanceInMilesTo(
-					u.getLocation());
-		}
-		Collections.sort(users, new Comparator<ListUser>() {
-			@Override
-			public int compare(ListUser lhs, ListUser rhs) {
-				return lhs.distance.compareTo(rhs.distance);
-			}
-		});
-		addToListView(users);
-		hideSpinner();
-	}
-
 	private void addToListView(ArrayList<ListUser> users) {
 		PeoplesListAdapter ad = new PeoplesListAdapter(this, users);
 		people.setAdapter(ad);
@@ -184,8 +188,10 @@ public class HomeActivity extends Activity {
 			@Override
 			public void onItemClick(AdapterView<?> arg0, View arg1, int arg2,
 					long arg3) {
-				ListUser user = (ListUser) people.getItemAtPosition(arg2);
-				goToProfile(user);
+				if (!loading) {
+					ListUser user = (ListUser) people.getItemAtPosition(arg2);
+					goToProfile(user);
+				}
 			}
 		});
 		people.setOnRefreshListener(new OnRefreshListener() {
@@ -199,7 +205,9 @@ public class HomeActivity extends Activity {
 
 	protected void goToProfile(ListUser user) {
 		Intent i = new Intent(this, ProfileActivity.class);
-		i.putParcelableArrayListExtra("users", users);
+		ArrayList<ListUser> userAsList = new ArrayList<ListUser>(
+				Arrays.asList(user));
+		i.putParcelableArrayListExtra("user", userAsList);
 		ArrayList<ListUser> currentUserAsList = new ArrayList<ListUser>(
 				Arrays.asList(currentUser));
 		i.putParcelableArrayListExtra("currentUser", currentUserAsList);
