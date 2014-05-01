@@ -2,6 +2,8 @@ package com.example.cmufriends;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Arrays;
 
 import org.apache.http.HttpResponse;
 import org.apache.http.HttpStatus;
@@ -33,6 +35,7 @@ public class ProfileActivity extends Activity implements OnClickListener {
 	private TextView textViewProfileEmail;
 
 	private ListUser user;
+	private ListUser currentUser;
 	private String facebookNumberID = "";
 	private String gender = "";
 
@@ -47,6 +50,8 @@ public class ProfileActivity extends Activity implements OnClickListener {
 
 		user = (ListUser) getIntent().getExtras()
 				.getParcelableArrayList("user").get(0);
+		currentUser = (ListUser) getIntent().getExtras()
+				.getParcelableArrayList("currentUser").get(0);
 
 		textViewProfileName.setText(user.name);
 		textViewProfileGender.setText(gender);
@@ -86,7 +91,15 @@ public class ProfileActivity extends Activity implements OnClickListener {
 	}
 
 	private void showOnMap() {
-
+		Intent i = new Intent(this, MapActivity.class);
+		i.putExtra("mapType", "TwoUsers");
+		ArrayList<ListUser> currentUserAsList = new ArrayList<ListUser>(
+				Arrays.asList(currentUser));
+		i.putParcelableArrayListExtra("currentUser", currentUserAsList);
+		ArrayList<ListUser> otherUserAsList = new ArrayList<ListUser>(
+				Arrays.asList(user));
+		i.putParcelableArrayListExtra("otherUser", otherUserAsList);
+		startActivity(i);
 	}
 
 	class SocialTask extends AsyncTask<String, Void, String>{

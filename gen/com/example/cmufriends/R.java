@@ -223,9 +223,10 @@ containing a value of this type.
         public static final int ic_plusone_tall_off_client=0x7f02001e;
         public static final int ic_pulltorefresh_arrow=0x7f02001f;
         public static final int icon=0x7f020020;
-        public static final int pull_to_refresh_header_background=0x7f020021;
-        public static final int scotty_dog=0x7f020022;
-        public static final int toast_shape=0x7f020023;
+        public static final int people=0x7f020021;
+        public static final int pull_to_refresh_header_background=0x7f020022;
+        public static final int scotty_dog=0x7f020023;
+        public static final int toast_shape=0x7f020024;
     }
     public static final class id {
         public static final int LinearLayout1=0x7f06000d;

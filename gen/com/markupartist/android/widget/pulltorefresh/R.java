@@ -10,7 +10,7 @@ public final class R {
 	public static final class drawable {
 		public static final int ic_pulltorefresh_arrow = 0x7f02001f;
 		public static final int icon = 0x7f020020;
-		public static final int pull_to_refresh_header_background = 0x7f020021;
+		public static final int pull_to_refresh_header_background = 0x7f020022;
 	}
 	public static final class id {
 		public static final int pull_to_refresh_header = 0x7f06002c;
