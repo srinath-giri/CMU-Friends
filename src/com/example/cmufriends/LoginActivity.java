@@ -36,6 +36,7 @@ public class LoginActivity extends Activity {
 		signIn = (Button) findViewById(R.id.SignInButton);
 		signUp = (Button) findViewById(R.id.SignUpButton);
 		andrewId = (EditText) findViewById(R.id.LoginAndrewId);
+		andrewId.requestFocus();
 		password = (EditText) findViewById(R.id.LoginPassword);
 
 		signIn.setOnClickListener(new OnClickListener() {

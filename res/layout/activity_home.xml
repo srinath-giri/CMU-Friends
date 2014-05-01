@@ -22,7 +22,13 @@
             android:layout_height="fill_parent"
             android:gravity="center"
             android:text="Welcome CMUer!"
+            android:layout_weight="0.75"
             android:textAppearance="?android:attr/textAppearanceLarge" />
+
+        <ProgressBar
+            android:id="@+id/locationSpinner"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
 
     </TableRow>
 
