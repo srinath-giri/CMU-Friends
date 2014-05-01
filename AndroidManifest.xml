@@ -48,6 +48,10 @@
         <meta-data
             android:name="com.google.android.maps.v2.API_KEY"
             android:value="AIzaSyCssAUyCL1NFbL_GQNuhszavXUhkSlU3zw" />
+        <activity
+            android:name="com.example.cmufriends.ProfileActivity"
+            android:label="@string/title_activity_profile" >
+        </activity>
     </application>
 
     <uses-feature
