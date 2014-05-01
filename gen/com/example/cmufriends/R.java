@@ -190,7 +190,7 @@ containing a value of this type.
         public static final int activity_vertical_margin=0x7f080001;
     }
     public static final class drawable {
-        public static final int cmu_friends_icon=0x7f020000;
+        public static final int cmu_mascot=0x7f020000;
         public static final int common_signin_btn_icon_dark=0x7f020001;
         public static final int common_signin_btn_icon_disabled_dark=0x7f020002;
         public static final int common_signin_btn_icon_disabled_focus_dark=0x7f020003;

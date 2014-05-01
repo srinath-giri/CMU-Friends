@@ -65,6 +65,15 @@ public class LoginActivity extends Activity {
 						});
 			}
 		});
+		
+		signUp.setOnClickListener(new OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				Intent i = new Intent(getApplicationContext(), RegisterActivity.class);
+				startActivity(i);
+			}
+		});
 	}
 
 	private void loginUser(ParseUser user) {
