@@ -8,6 +8,7 @@
     <string name="IntroString">CMU Friends is an app for finding your nearest CMUers. You only need to provide your andrewID and facebook account number for registration. It is the best way for you to find alumnus and broaden your social networks!</string>
     <string name="title_activity_home">Home</string>
     <string name="title_activity_profile">Profile</string>
+    <string name="title_activity_register">Register</string>
     <string name="andrew_domain">andrew.cmu.edu</string>
 
 </resources>
