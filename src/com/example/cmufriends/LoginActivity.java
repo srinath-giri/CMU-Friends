@@ -32,7 +32,8 @@ public class LoginActivity extends Activity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_login);
-		Parse.initialize(this, "kw8uUVhfdP3VG3tt5wh5eAGcUqB0EdQXNEPNP0Y4", "ir2NtarhYtNDV8VwDUCAG0q1dzAOF6zBL0a8gQEx");
+		Parse.initialize(this, "kw8uUVhfdP3VG3tt5wh5eAGcUqB0EdQXNEPNP0Y4",
+				"ir2NtarhYtNDV8VwDUCAG0q1dzAOF6zBL0a8gQEx");
 		signIn = (Button) findViewById(R.id.SignInButton);
 		signUp = (Button) findViewById(R.id.SignUpButton);
 		andrewId = (EditText) findViewById(R.id.LoginAndrewId);
@@ -46,7 +47,6 @@ public class LoginActivity extends Activity {
 				String andrewIdString = andrewId.getEditableText().toString();
 				String passwordString = password.getEditableText().toString();
 
-				// hide the keyboard.
 				InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
 				imm.hideSoftInputFromWindow(andrewId.getWindowToken(), 0);
 
@@ -55,13 +55,11 @@ public class LoginActivity extends Activity {
 							@Override
 							public void done(ParseUser user, ParseException e) {
 								if (user != null) {
-									// Hooray! The user is logged in.
 									loginUser(user);
 
 								} else {
-									// Signup failed. Look at the ParseException
-									// to see what happened.
-									showToast(e.getMessage());
+									showToast("Unable to Sign In because: "
+											+ e.getMessage());
 								}
 							}
 						});
@@ -75,7 +73,7 @@ public class LoginActivity extends Activity {
 		startActivity(i);
 		finish();
 	}
-	
+
 	public void showToast(String msg) {
 		Toast toast = new Toast(getApplicationContext());
 		toast.setDuration(Toast.LENGTH_LONG);
