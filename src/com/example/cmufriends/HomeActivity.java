@@ -19,21 +19,23 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.Button;
-import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.markupartist.android.widget.PullToRefreshListView;
+import com.markupartist.android.widget.PullToRefreshListView.OnRefreshListener;
 import com.parse.LocationCallback;
 import com.parse.ParseException;
 import com.parse.ParseGeoPoint;
 import com.parse.ParseObject;
 import com.parse.ParseQuery;
 import com.parse.ParseUser;
+import com.parse.SaveCallback;
 
 public class HomeActivity extends Activity {
 
-	ListView people;
+	PullToRefreshListView people;
 	String username;
 	ListUser currentUser;
 	List<ParseUser> results;
@@ -46,7 +48,7 @@ public class HomeActivity extends Activity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_home);
 		username = getIntent().getExtras().getString("username");
-		people = (ListView) findViewById(R.id.peopleList);
+		people = (PullToRefreshListView) findViewById(R.id.peopleList);
 		showMapButton = (Button) findViewById(R.id.homeShowMapButton);
 		locationSpinner = (ProgressBar) findViewById(R.id.locationSpinner);
 		showMapButton.setOnClickListener(new OnClickListener() {
@@ -57,10 +59,6 @@ public class HomeActivity extends Activity {
 			}
 
 		});
-		showMapButton.setEnabled(false);
-		showMapButton.setVisibility(View.INVISIBLE);
-		locationSpinner.setEnabled(true);
-		locationSpinner.setVisibility(View.VISIBLE);
 		populatePeopleList();
 	}
 
@@ -75,6 +73,7 @@ public class HomeActivity extends Activity {
 	}
 
 	private void populatePeopleList() {
+		showSpinner();
 		ParseQuery<ParseUser> query = ParseUser.getQuery();
 		query.selectKeys(Arrays.asList("username", "location", "facebookID",
 				"name"));
@@ -108,15 +107,33 @@ public class HomeActivity extends Activity {
 				});
 	}
 
+	private void showSpinner() {
+		showMapButton.setEnabled(false);
+		showMapButton.setVisibility(View.INVISIBLE);
+		locationSpinner.setEnabled(true);
+		locationSpinner.setVisibility(View.VISIBLE);
+	}
+
+	private void hideSpinner() {
+		showMapButton.setEnabled(true);
+		showMapButton.setVisibility(View.VISIBLE);
+		locationSpinner.setEnabled(false);
+		locationSpinner.setVisibility(View.INVISIBLE);
+
+	}
+
 	protected void updateUserLocation(ParseGeoPoint p) {
 		ParseUser user = ParseUser.getCurrentUser();
 		user.put("location", p);
-		try {
-			user.save();
-		} catch (ParseException e) {
-			showToast("Unable to update User Location because: "
-					+ e.getMessage());
-		}
+		user.saveInBackground(new SaveCallback() {
+			@Override
+			public void done(ParseException e) {
+				if (e != null) {
+					showToast("Unable to update User Location because: "
+							+ e.getMessage());
+				}
+			}
+		});
 	}
 
 	private void initPeopleList(List<ParseUser> results) {
@@ -124,7 +141,10 @@ public class HomeActivity extends Activity {
 		for (ParseObject p : results) {
 			if (!p.getString("username").equals(username)) {
 				String u = p.getString("username");
-				ParseGeoPoint loc = p.getParseGeoPoint("location");
+				ParseGeoPoint loc = new ParseGeoPoint(0, 0);
+				if (p.containsKey("location")) {
+					loc = p.getParseGeoPoint("location");
+				}
 				Double d = Double.valueOf(0);
 				String n = p.getString("name");
 				String f = p.getString("facebookID");
@@ -153,10 +173,7 @@ public class HomeActivity extends Activity {
 			}
 		});
 		addToListView(users);
-		showMapButton.setEnabled(true);
-		showMapButton.setVisibility(View.VISIBLE);
-		locationSpinner.setEnabled(false);
-		locationSpinner.setVisibility(View.INVISIBLE);
+		hideSpinner();
 	}
 
 	private void addToListView(ArrayList<ListUser> users) {
@@ -169,6 +186,13 @@ public class HomeActivity extends Activity {
 					long arg3) {
 				ListUser user = (ListUser) people.getItemAtPosition(arg2);
 				goToProfile(user);
+			}
+		});
+		people.setOnRefreshListener(new OnRefreshListener() {
+
+			@Override
+			public void onRefresh() {
+				populatePeopleList();
 			}
 		});
 	}

@@ -37,6 +37,10 @@
             android:name="com.example.cmufriends.MapActivity"
             android:label="MapActivity" >
         </activity>
+        <activity
+            android:name="com.example.cmufriends.RegisterActivity"
+            android:label="RegisterActivity" >
+        </activity>
 
         <meta-data
             android:name="com.google.android.gms.version"

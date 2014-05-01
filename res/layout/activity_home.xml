@@ -20,16 +20,15 @@
             android:id="@+id/textView1"
             android:layout_width="fill_parent"
             android:layout_height="fill_parent"
+            android:layout_weight="0.75"
             android:gravity="center"
             android:text="Welcome CMUer!"
-            android:layout_weight="0.75"
             android:textAppearance="?android:attr/textAppearanceLarge" />
 
         <ProgressBar
             android:id="@+id/locationSpinner"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content" />
-
     </TableRow>
 
     <TableRow
@@ -38,12 +37,12 @@
         android:layout_height="402dp"
         android:paddingTop="10dp" >
 
-        <ListView
+        <com.markupartist.android.widget.PullToRefreshListView
             android:id="@+id/peopleList"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            tools:listitem="@android:layout/simple_list_item_1" >
-        </ListView>
+            tools:listitem="@android:layout/simple_list_item_1" />
+        
     </TableRow>
 
     <TableRow
@@ -59,7 +58,6 @@
             android:layout_height="wrap_content"
             android:gravity="center"
             android:text="Show Map" />
-
     </TableRow>
 
 </LinearLayout>
