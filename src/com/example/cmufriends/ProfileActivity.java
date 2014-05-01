@@ -113,6 +113,8 @@ public class ProfileActivity extends Activity implements OnClickListener {
 	            }
 	        } catch (IOException e) {
                 Log.d(getString(R.string.title_activity_profile), e.getMessage());
+	        } catch (Exception e) {
+	        	Log.d(getString(R.string.title_activity_profile), e.getMessage());
 	        }
 	        return jsonResult;
 	    }
@@ -120,10 +122,12 @@ public class ProfileActivity extends Activity implements OnClickListener {
 	    @Override
 	    protected void onPostExecute(String json) {
 	        super.onPostExecute(json);
+	        if(json != null) {
 	        parseJSON(json);
 	        textViewProfileGender.setText(gender);
 	        buttonSendFacebookMessage.setOnClickListener(ProfileActivity.this);
 			buttonVisitFacebook.setOnClickListener(ProfileActivity.this);
+	        }
 	    }
 
 	    private void parseJSON(String jsonResult) {
