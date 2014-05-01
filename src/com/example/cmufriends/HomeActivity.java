@@ -103,13 +103,20 @@ public class HomeActivity extends Activity {
 						} else {
 							showToast("Unable to get User Location because: "
 									+ e.getMessage());
-							e.printStackTrace();
 						}
 					}
 				});
 	}
 
 	protected void updateUserLocation(ParseGeoPoint p) {
+		ParseUser user = ParseUser.getCurrentUser();
+		user.put("location", p);
+		try {
+			user.save();
+		} catch (ParseException e) {
+			showToast("Unable to update User Location because: "
+					+ e.getMessage());
+		}
 	}
 
 	private void initPeopleList(List<ParseUser> results) {
