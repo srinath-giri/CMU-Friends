@@ -10,6 +10,13 @@ import org.json.JSONObject;
 
 import com.google.android.gms.maps.model.LatLng;
 
+/**
+ * Got from : 
+ * 
+ * 		http://androidmapv2.blogspot.com/2013/11/drawing-driving-route-directions.html
+ *
+ *
+ */
 public class DirectionsJSONParser {
 	
 	/** Receives a JSONObject and returns a list of lists containing latitude and longitude */
