@@ -252,13 +252,13 @@ containing a value of this type.
         public static final int homeShowMapButton=0x7f06000c;
         public static final int hybrid=0x7f060004;
         public static final int imageView1=0x7f06000e;
-        public static final int imageViewProfilePhoto=0x7f060017;
         public static final int locationSpinner=0x7f060008;
         public static final int map=0x7f06002f;
         public static final int none=0x7f060000;
         public static final int normal=0x7f060001;
         public static final int passwordRow=0x7f060012;
         public static final int peopleList=0x7f06000a;
+        public static final int profilePicture=0x7f060017;
         public static final int pull_to_refresh_header=0x7f060030;
         public static final int pull_to_refresh_image=0x7f060032;
         public static final int pull_to_refresh_progress=0x7f060031;
